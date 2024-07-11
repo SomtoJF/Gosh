@@ -1,1 +1,5 @@
 gosh
+
+*.db
+*.sqlite
+*.sqlite3

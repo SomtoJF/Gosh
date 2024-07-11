@@ -9,7 +9,14 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/somtojf/gosh/initializers"
+	"github.com/somtojf/gosh/migrate"
+	"github.com/somtojf/gosh/models"
 )
+
+func init() {
+	initializers.ConnectToDb()
+}
 
 func execInput(cmd string) error {
 	input := strings.TrimSuffix(cmd, "\n")
@@ -34,6 +41,7 @@ func execInput(cmd string) error {
 }
 
 func main() {
+	migrate.Migrate()
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -52,6 +60,15 @@ func main() {
 
 		if err = execInput(input); err != nil {
 			fmt.Fprintln(os.Stderr, err)
+		}
+
+		if err == nil {
+			post := models.History{Command: input}
+			result := initializers.DB.Create(&post)
+
+			if result.Error != nil {
+				color.Red("could not persist command to history")
+			}
 		}
 	}
 }
