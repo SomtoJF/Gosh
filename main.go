@@ -40,8 +40,10 @@ func main() {
 		wd, _ := os.Getwd()
 		prompt := fmt.Sprintf("%s | gosh 🔱: ", wd)
 
-		c := color.New(color.FgCyan).Add(color.Underline)
+		c := color.New(color.FgCyan).Add(color.Underline).Add(color.Bold)
+		i := color.New(color.FgGreen)
 		c.Println(prompt)
+		i.Print("> ")
 
 		input, err := reader.ReadString('\n')
 		if err != nil {
