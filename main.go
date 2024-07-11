@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func execInput(cmd string) error {
@@ -35,7 +37,11 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Print("gosh 🔱: ")
+		wd, _ := os.Getwd()
+		prompt := fmt.Sprintf("%s | gosh 🔱: ", wd)
+
+		c := color.New(color.FgCyan).Add(color.Underline)
+		c.Println(prompt)
 
 		input, err := reader.ReadString('\n')
 		if err != nil {
