@@ -30,7 +30,19 @@ func execInput(cmd string) error {
 		return os.Chdir(args[1])
 	case "exit":
 		os.Exit(0)
+	case "history":
+		var history []models.History
 
+		result := initializers.DB.Find(&history)
+
+		if result.Error != nil {
+			return result.Error
+		}
+
+		for _, historyCommand := range history {
+			fmt.Printf("%d\t%s", historyCommand.ID, historyCommand.Command)
+		}
+		return nil
 	}
 
 	command := exec.Command(args[0], args[1:]...)
