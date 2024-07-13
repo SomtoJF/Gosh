@@ -1,13 +1,13 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 
+	"github.com/chzyer/readline"
 	"github.com/fatih/color"
 	"github.com/somtojf/gosh/initializers"
 	"github.com/somtojf/gosh/migrate"
@@ -54,18 +54,21 @@ func execInput(cmd string) error {
 
 func main() {
 	migrate.Migrate()
-	reader := bufio.NewReader(os.Stdin)
+
+	rl, err := readline.New("> ")
+	if err != nil {
+		panic(err)
+	}
+	defer rl.Close()
 
 	for {
 		wd, _ := os.Getwd()
 		prompt := fmt.Sprintf("%s | gosh 🔱: ", wd)
 
 		c := color.New(color.FgCyan).Add(color.Underline).Add(color.Bold)
-		i := color.New(color.FgGreen)
 		c.Println(prompt)
-		i.Print("> ")
 
-		input, err := reader.ReadString('\n')
+		input, err := rl.Readline()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
